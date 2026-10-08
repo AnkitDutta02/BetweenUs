@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Between then and now</title>
+<meta name="description" content="The story of us, read slowly.">
+<meta property="og:title" content="Between then and now">
+<meta property="og:description" content="The story of us, read slowly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fog:#E4E9E4; --paper:#F2F4F0; --estate:#1E3A32; --moss:#4F6963;
+    --mist:#AEBDB6; --marigold:#C98E22; --marigold-soft:#E9C77F;
+    --measure:34rem;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--fog);color:var(--estate);
+    font-family:"Newsreader",Georgia,"Times New Roman",serif;font-optical-sizing:auto;
+    font-size:1.1875rem;line-height:1.62;font-weight:350;-webkit-font-smoothing:antialiased;
+    font-variant-numeric:oldstyle-nums;
+  }
+  .wrap{max-width:var(--measure);margin:0 auto;padding:0 1.5rem}
+  p{margin:0 0 1.1em}
+  .quiet{color:var(--moss)}
+  :focus-visible{outline:2px solid var(--marigold);outline-offset:3px;border-radius:2px}
+  .nw{white-space:nowrap}
+  .tab{font-variant-numeric:lining-nums tabular-nums}
+
+  header.open{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:4rem 1.5rem}
+  header.open h1{font-weight:300;font-size:clamp(3rem,11vw,5.4rem);line-height:1.02;margin:0 0 2rem;letter-spacing:-.025em}
+  .beat{display:block;width:100%;height:46px;margin:0 0 2.2rem}
+  .beat path{fill:none;stroke:var(--marigold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .lede{font-size:1.25rem}
+  .scrollnote{margin-top:2.5rem;font-size:.95rem;color:var(--moss);font-style:italic}
+
+  section.wrap{padding:5.5rem 1.5rem 1.5rem}
+  h2{font-weight:400;font-size:clamp(1.9rem,5vw,2.4rem);line-height:1.15;margin:0 0 1.4rem;letter-spacing:-.01em}
+
+  /* memories */
+  .threads{font-size:1.25rem;line-height:1.85}
+  .thread{cursor:pointer;text-decoration:underline;text-decoration-color:var(--marigold-soft);text-decoration-thickness:2px;text-underline-offset:.22em}
+  .thread[aria-expanded="true"]{text-decoration-color:var(--marigold);font-style:italic}
+  .memory{margin:1.4rem 0 0;padding:1.1rem 0 0;border-top:1px solid var(--mist);min-height:7.5rem}
+  .memory .hint{color:var(--moss);font-style:italic}
+
+  /* chart */
+  .wide{margin:2rem -1.5rem 0;padding:0 1.5rem}
+  @media (min-width:760px){.wide{margin:2rem calc((var(--measure) - 46rem)/2) 0;padding:0}}
+  .chart{width:100%;height:auto;display:block;touch-action:pan-y;cursor:crosshair}
+  .chart .line{fill:none;stroke:var(--marigold);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .chart .area{fill:var(--marigold);fill-opacity:.09}
+  .chart .base{stroke:var(--mist);stroke-width:1}
+  .chart .year{fill:var(--moss);font-size:14px;font-style:italic}
+  .chart .tick{stroke:var(--mist)}
+  .chart .gm{fill:var(--estate)}
+  .chart .mark{fill:var(--paper);stroke:var(--estate);stroke-width:1.2}
+  .chart .cursor{stroke:var(--estate);stroke-dasharray:2 3}
+  .chart .sel{fill:var(--marigold);stroke:var(--paper);stroke-width:2}
+  .legend{display:flex;gap:1.4rem;flex-wrap:wrap;font-size:.92rem;color:var(--moss);margin:.6rem 0 0}
+  .legend span::before{content:"";display:inline-block;vertical-align:middle;margin-right:.45rem}
+  .legend .l1::before{width:18px;height:2px;background:var(--marigold)}
+  .legend .l2::before{width:5px;height:5px;border-radius:50%;background:var(--estate)}
+  .legend .l3::before{width:7px;height:7px;border-radius:50%;border:1.2px solid var(--estate);background:var(--paper)}
+  .readout{margin:1.2rem 0 0;min-height:8.5rem;border-left:2px solid var(--marigold);padding:.1rem 0 .1rem 1rem}
+  .readout .when{font-style:italic;color:var(--moss);font-size:.98rem;margin:0 0 .25rem}
+  .readout .nums{font-size:.92rem;color:var(--moss);margin:.35rem 0 0}
+
+  /* revelations */
+  .rv{padding:3.2rem 0 0}
+  .rv h3{font-weight:400;font-size:1.55rem;line-height:1.2;margin:0 0 .8rem;letter-spacing:-.005em}
+  .rv .vis{margin:1.4rem 0 1.2rem}
+  .rv .cap{font-size:.95rem;color:var(--moss);font-style:italic}
+  .toggle{display:flex;gap:1.1rem;flex-wrap:wrap;margin:.2rem 0 1rem}
+  .toggle button,.btn{font:inherit;font-size:.98rem;font-style:italic;color:var(--moss);background:none;border:0;border-bottom:1px solid transparent;padding:.1rem 0;cursor:pointer}
+  .toggle button[aria-pressed="true"]{color:var(--estate);border-color:var(--marigold)}
+  .btn{color:var(--estate);border-color:var(--estate)}
+  .btn:hover{color:var(--marigold);border-color:var(--marigold)}
+
+  .slopes{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media (max-width:520px){.slopes{grid-template-columns:1fr}}
+  .slopes svg{width:100%;height:auto;display:block}
+  .slopes .wd{font-size:19px;font-style:italic;fill:var(--estate);text-anchor:middle}
+  .slopes .ax{stroke:var(--mist)}
+  .slopes .yr{font-size:13px;font-style:italic;fill:var(--moss);text-anchor:middle}
+  .slopes .sl{stroke-width:2.2;stroke-linecap:round;transition:stroke-dashoffset 1.6s cubic-bezier(.4,.1,.3,1) .2s}
+  .slopes .sl.y{stroke:var(--marigold)} .slopes .sl.m{stroke:var(--estate)}
+  .slopes .pt.y{fill:var(--marigold)} .slopes .pt.m{fill:var(--estate)}
+  .slopes .vl{font-size:13px;fill:var(--estate)}
+  .slopes .late{opacity:0;transition:opacity .5s ease 1.6s}
+  .in .slopes .late{opacity:1}
+
+  .clockwrap{display:grid;grid-template-columns:1fr;gap:1rem;align-items:center}
+  @media (min-width:600px){.clockwrap{grid-template-columns:17rem 1fr}}
+  .clock{width:100%;max-width:17rem;display:block;margin:0 auto}
+  .clock .bar{stroke:var(--marigold);stroke-width:5;stroke-linecap:round}
+  .clock .ring{fill:none;stroke:var(--mist)}
+  .clock text{font-size:12px;fill:var(--moss);font-style:italic;text-anchor:middle;dominant-baseline:central}
+  .clock .big{font-size:22px;fill:var(--estate);font-style:normal}
+
+  .race{display:grid;gap:.9rem}
+  .race .row{display:grid;grid-template-columns:7.2rem 1fr 3.2rem;gap:.8rem;align-items:center;font-size:.98rem}
+  .race .lab{color:var(--moss);font-style:italic}
+  .race .track{position:relative;height:2px;background:var(--mist)}
+  .race .fill{position:absolute;left:0;top:0;height:2px;background:var(--marigold);width:0}
+  .race .dot{position:absolute;top:-4px;left:0;width:10px;height:10px;border-radius:50%;background:var(--estate);margin-left:-5px}
+  .race .t{text-align:right}
+
+  .stretch{font-size:clamp(2rem,7vw,2.8rem);line-height:1.25;margin:.4rem 0}
+  .stretch .word{display:block;white-space:nowrap;overflow:hidden}
+  .stretch .x{display:inline-block;max-width:0;opacity:0;transition:max-width .5s ease,opacity .5s ease;vertical-align:bottom}
+  .stretch .x.on{max-width:.7em;opacity:1}
+  .stretch .who{font-size:.95rem;font-style:italic;color:var(--moss);margin-left:.6rem}
+
+  .calls{width:100%;height:auto;display:block}
+  .calls rect{fill:var(--estate)}
+  .calls rect.hi{fill:var(--marigold)}
+  .calls text{font-size:15px;fill:var(--moss);font-style:italic}
+  .calls .hl{fill:var(--estate);font-style:normal;font-size:15px}
+  .calls line{stroke:var(--mist)}
+
+  .pairs2{display:grid;gap:1.2rem}
+  .pairs2 .yr{font-style:italic;color:var(--moss);font-size:.95rem;margin:0 0 .3rem}
+  .split{display:flex;height:22px;gap:2px}
+  .split div{height:100%;transform:scaleX(0);transition:transform 1.2s cubic-bezier(.3,.6,.2,1)}
+  .split .a{background:var(--marigold);transform-origin:right}
+  .split .b{background:var(--estate);transform-origin:left}
+  .in .split div{transform:scaleX(1)}
+  .split-l{display:flex;justify-content:space-between;font-size:.92rem;color:var(--moss);margin-top:.25rem}
+
+  .receipt{background:var(--paper);padding:1.4rem 1.5rem 1.2rem;max-width:22rem;font-size:1.02rem;
+    -webkit-mask:radial-gradient(circle at 8px 100%,transparent 6px,#000 6.5px) 0 0/16px 100% repeat-x;
+            mask:radial-gradient(circle at 8px 100%,transparent 6px,#000 6.5px) 0 0/16px 100% repeat-x;padding-bottom:1.8rem}
+  .receipt .top{text-align:center;font-style:italic;color:var(--moss);margin:0 0 1rem;font-size:.95rem}
+  .receipt ul{list-style:none;margin:0;padding:0}
+  .receipt li{display:flex;gap:.4rem;align-items:baseline;padding:.12rem 0}
+  .receipt li .dots{flex:1;border-bottom:1px dotted var(--mist);transform:translateY(-.3em)}
+  .receipt .sum{border-top:1px solid var(--mist);margin-top:.8rem;padding-top:.6rem}
+
+  .blocks{display:grid;gap:1rem}
+  .blocks .yr{font-style:italic;color:var(--moss);font-size:.95rem;margin:0 0 .35rem}
+  .blocks .sq{display:flex;flex-wrap:wrap;gap:4px}
+  .blocks .sq i{width:11px;height:11px;background:var(--estate);opacity:0;transform:scale(.4);transition:opacity .3s,transform .3s}
+  .blocks .sq.m i{background:var(--marigold)}
+  .in .blocks .sq i{opacity:1;transform:scale(1)}
+
+  /* loop */
+  .loop{display:grid;grid-template-columns:1fr;gap:1.5rem;margin:1.8rem 0 0}
+  @media (min-width:640px){.loop{grid-template-columns:15rem 1fr;align-items:center}}
+  .ringsvg{width:100%;max-width:15rem;margin:0 auto;display:block}
+  .ringsvg circle.track{fill:none;stroke:var(--mist)}
+  .ringsvg .node{cursor:pointer}
+  .ringsvg .node circle{fill:var(--paper);stroke:var(--estate);stroke-width:1.2;transition:fill .25s}
+  .ringsvg .node text{font-size:13px;fill:var(--estate);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  .ringsvg .node.on circle{fill:var(--marigold);stroke:var(--marigold)}
+  .ringsvg .node.on text{fill:var(--paper)}
+  .ringsvg .node:focus-visible{outline:none}
+  .ringsvg .node:focus-visible circle{stroke:var(--marigold);stroke-width:3}
+  .ringsvg .center{font-style:italic;font-size:12.5px;fill:var(--moss);text-anchor:middle}
+  .step h3{font-weight:500;font-size:1.3rem;margin:0 0 .8rem}
+  .step dt{font-style:italic;color:var(--moss);font-size:.95rem}
+  .step dd{margin:0 0 .9rem}
+  .stepnav{display:flex;gap:1rem}
+
+  /* said / meant */
+  .pairs{list-style:none;margin:2rem 0 0;padding:0}
+  .pairs li{margin:0 0 1.6rem}
+  .who{font-size:.92rem;font-style:italic;color:var(--moss);margin:0 0 .3rem}
+  .turn{display:block;cursor:pointer;background:var(--paper);border:1px solid transparent;border-radius:3px;padding:1.05rem 1.15rem;transition:border-color .2s}
+  .turn:hover{border-color:var(--mist)}
+  .turn .said{font-size:1.18rem;margin:0}
+  .turn .meant{display:none;font-style:italic;margin:0}
+  .turn[aria-pressed="true"] .said{display:none}
+  .turn[aria-pressed="true"] .meant{display:block}
+  .turn .cue{display:block;margin-top:.55rem;font-size:.85rem;color:var(--moss);font-style:italic}
+  .turn[aria-pressed="true"]{background:transparent;border-color:var(--marigold-soft)}
+  .turn .later{display:block;margin-top:.7rem;font-style:normal;font-size:.98rem;color:var(--moss)}
+
+  /* forks */
+  .forks{margin:2rem 0 0;padding:0;list-style:none;border-left:1px solid var(--mist)}
+  .forks li{position:relative;padding:0 0 2rem 1.4rem}
+  .forks li::before{content:"";position:absolute;left:-4.5px;top:.55rem;width:8px;height:8px;border-radius:50%;background:var(--estate)}
+  .forks li.good::before{background:var(--marigold)}
+  .forks .date{font-style:italic;color:var(--moss);font-size:.95rem;margin:0 0 .2rem}
+  .forks summary{cursor:pointer;font-style:italic;font-size:1rem;list-style:none;display:inline;border-bottom:1px solid var(--marigold-soft)}
+  .forks summary::-webkit-details-marker{display:none}
+  .forks details[open] summary{border-color:var(--marigold)}
+  .forks details p{margin:.7rem 0 0;padding-left:.9rem;border-left:2px solid var(--marigold)}
+
+  .ifever{list-style:none;padding:0;margin:2rem 0 0}
+  .ifever li{padding:1.15rem 0;border-top:1px solid var(--mist)}
+  .ifever li:last-child{border-bottom:1px solid var(--mist)}
+  .ifever b{font-weight:500;display:block;margin-bottom:.2rem}
+  .ifever .inv{color:var(--moss);font-style:italic;font-size:.95rem;display:block;margin-top:.35rem}
+
+  section.close{padding:6rem 1.5rem 7rem}
+  .sign{margin-top:2.4rem;font-style:italic}
+  .last{margin-top:3.5rem;color:var(--moss);font-size:.95rem;font-style:italic}
+
+  .store{display:none}
+
+  @media (max-width:520px){
+    body{font-size:1.09rem}
+    .threads{font-size:1.14rem}
+    section.wrap{padding-top:4.5rem}
+    .race .row{grid-template-columns:5.6rem 1fr 2.8rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+  }
+
+  /* ---------- edit mode (only when the address ends in #edit) ---------- */
+  .editing [contenteditable="true"]{outline:1px dashed var(--marigold-soft);outline-offset:2px;border-radius:2px;cursor:text}
+  .editing [contenteditable="true"]:focus{outline:2px solid var(--marigold);background:rgba(255,255,255,.5)}
+  .editing .store{display:block;margin:1.4rem 0 0;padding:1rem 1.1rem;border:1px dashed var(--moss);background:rgba(255,255,255,.35)}
+  .editing .store::before{content:attr(data-label);display:block;font-style:italic;font-size:.9rem;color:var(--moss);margin-bottom:.7rem}
+  .editing .store [data-key]::before{content:attr(data-key);display:block;font-size:.8rem;color:var(--moss);font-style:italic}
+  .editing .turn .meant{display:block;margin-top:.8rem;padding-top:.8rem;border-top:1px dashed var(--mist)}
+  .editing .turn .said{display:block}
+  #edit-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--estate);color:var(--paper);
+    display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center;padding:.8rem 1.2rem;font-size:.95rem}
+  #edit-bar span{flex:1 1 16rem;font-style:italic}
+  #edit-bar button{font:inherit;font-size:.95rem;background:var(--paper);color:var(--estate);border:0;border-radius:2px;padding:.35rem .8rem;cursor:pointer}
+  #edit-bar button.ghost{background:none;color:var(--paper);border:1px solid var(--paper)}
+  #edit-panel{position:fixed;inset:0;z-index:60;background:rgba(30,58,50,.55);display:flex;align-items:center;justify-content:center;padding:1rem}
+  #edit-panel[hidden]{display:none}
+  #edit-panel .ep-box{background:var(--paper);color:var(--estate);max-width:40rem;width:100%;padding:1.2rem;border-radius:4px;font-size:1rem}
+  #edit-panel textarea{width:100%;height:9rem;font:12px/1.4 ui-monospace,Menlo,monospace;margin:.6rem 0;border:1px solid var(--mist);background:#fff;color:#222}
+  #edit-panel .ep-row{display:flex;gap:.8rem}
+  #edit-panel button{font:inherit;font-size:.95rem;background:var(--estate);color:var(--paper);border:0;border-radius:2px;padding:.4rem .9rem;cursor:pointer}
+  #edit-panel button.ghost{background:none;color:var(--estate);border:1px solid var(--estate)}
+</style>
+</head>
+<body>
+
+<header class="open wrap">
+  <h1>Between then and now</h1>
+  <svg class="beat" viewBox="0 0 400 46" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 30 H150 L160 30 L168 8 L178 40 L186 22 L194 30 H260 L268 26 L274 32 L280 30 H400"></path>
+  </svg>
+  <p class="lede">It’s our story, from a little further away than either of us could stand at the time.</p>
+  <p>I went back through all of it. The good parts, the parts I’m not proud of, and the long quiet in between. I’ve tried to tell it honestly, which means my mistakes are in here too, and they come first.</p>
+  <p class="scrollnote">Read it whenever, at whatever pace.</p>
+</header>
+
+<main>
+
+<section class="wrap" id="had">
+  <h2>What we had</h2>
+  <p>About seventy-six thousand messages, and most of them are about nothing. <em>Ki kheli. Pouchechis? Bari dhuklam.</em> I used to think the big things held us together. Reading it back, it was the nothing.</p>
+  <p>You put it better than I could, this July: that our food habits, travel habits, sleeping habits, everything was somehow in sync. Dal chawal with chingri. Beef achar.</p>
+  <p class="threads">The things I keep finding in our chat:
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="chik" aria-expanded="false">a Chikmagalur morning</span>,</span>
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="kosha" aria-expanded="false">mutton kosha from a Bong Eats video</span>,</span>
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="bajar" aria-expanded="false">bajar, and momo on the way back</span>,</span>
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="tripod" aria-expanded="false">your tripod</span>,</span>
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="bhaja" aria-expanded="false">five kinds of bhaja</span>,</span>
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="pondi" aria-expanded="false">a night bus to Pondicherry</span>,</span> and
+    <span class="nw"><span class="thread" role="button" tabindex="0" data-m="gm" aria-expanded="false">good morning ❤️❤️❤️</span>.</span>
+  </p>
+  <div class="memory" id="memory" data-gen="" aria-live="polite"><p class="hint">Tap any of them.</p></div>
+
+  <div class="store" id="store-memories" data-label="What appears when she taps each memory above">
+    <p data-key="chik">That November you wrote from Kolkata, walking by the Ganga with cha, missing our Chikmagalur morning. Much later you said a trip with just me somehow didn’t feel boring. Coming from someone who hates compliments, I’ve decided to count that as one.</p>
+    <p data-key="kosha">The first time I made it, following a Bong Eats video. A year and a half later you said you still remember the taste. I’m not sure the cooking was that good. I think the evening was.</p>
+    <p data-key="bajar">You told me in May that you missed going bajar together and eating momo, or anything at all, on the way back. Of everything you could have missed, that one. It’s the one I miss too.</p>
+    <p data-key="tripod">It came with me to Tosh and Kutla in January 2025. “All thanks to your tripod,” I wrote. It’s still with me. It’s still yours.</p>
+    <p data-key="bhaja">February 2024: you wanted to keep my childhood tradition of five kinds of bhaja on my birthday. I don’t think anyone had ever made a plan that small, and that kind, for me.</p>
+    <p data-key="pondi">Thursday night bus out, Sunday night bus back, a cheap place to stay. You planned the whole thing in one message, and it was exactly as good as you said it would be.</p>
+    <p data-key="gm">In 2024 we said good morning to each other 574 times, and sent about 3,100 hearts. Nobody counts these while they’re happening. I only counted now because I wanted to know what ordinary used to look like.</p>
+  </div>
+</section>
+
+<section class="wrap" id="shape">
+  <h2>The shape of it</h2>
+  <p>This is how much we talked, month by month, from the day the old chat got deleted until this week. I didn’t make this to prove anything. I just wanted to see it.</p>
+  <div class="wide">
+    <svg class="chart" id="chart" data-gen="" viewBox="0 0 736 250" role="img" aria-label="Messages per month from January 2024 to October 2026. Use left and right arrow keys to move between months." tabindex="0"></svg>
+    <div class="legend"><span class="l1">messages that month</span><span class="l2">good mornings</span><span class="l3">a moment worth reading</span></div>
+    <div class="readout" id="readout" data-gen="" aria-live="polite">
+      <p class="when">Tap or hover over any month.</p>
+      <p>The circled ones have something written about them.</p>
+    </div>
+  </div>
+  <div class="store" id="store-notes" data-label="Notes that appear on the chart (by month)">
+    <p data-key="2024-01">The chat starts on 14 January, because the old one got deleted. “Shob delete hoe gelo.” We’d already had a year by then.</p>
+    <p data-key="2024-02">Our loudest month. Also the first small misunderstanding on this thread, and the first time we repaired one well.</p>
+    <p data-key="2024-07">You called me the most understanding and peaceful partner. I’ve thought about that line a lot since, mostly about how I stopped living up to it.</p>
+    <p data-key="2024-11">You wished me on Men’s Day and thanked me for not being bound by stereotypes. Two months before everything. I think both things were true.</p>
+    <p data-key="2024-12">Still fifty-eight good mornings. Nothing in the line says what’s coming.</p>
+    <p data-key="2025-01">8 January, you finally said all of it, and I answered with questions. 17 January, our last good morning with hearts. 22 January, it ended. The next day would have been two years.</p>
+    <p data-key="2025-02">Almost nothing, and most of what there is, is me. I’m not proud of all of it.</p>
+    <p data-key="2025-07">Zero. The only month with no messages at all.</p>
+    <p data-key="2025-10">Bijoya. You told me something honest about trust, and I listened properly for once.</p>
+    <p data-key="2025-12">30 December, from Kasol: you wrote that this time you didn’t let your mind stop you from texting.</p>
+    <p data-key="2026-01">The longest, most honest conversations we’ve ever had. Not as a couple. Better than we managed as one.</p>
+    <p data-key="2026-03">You moved to Pune. A new city, a new flat, a new idea of home.</p>
+    <p data-key="2026-07">“Everything was in sync.” Food, travel, sleep. You said it out of nowhere, and then apologised for saying it. You never need to.</p>
+    <p data-key="2026-10">Now. Pujo, Kolkata, rain. This is where the line is today.</p>
+  </div>
+  <p style="margin-top:2rem">The line never goes back to where it was. I don’t think it should. The second half isn’t a recovery of the first. It’s a different shape: slower, more careful, and in a strange way more honest than we managed when we were together.</p>
+</section>
+
+<section class="wrap" id="remembers">
+  <h2>What the chat remembers</h2>
+  <p>I counted a few things neither of us could have noticed while they were happening. None of it proves anything. It’s just what was there.</p>
+
+  <div class="rv" data-anim="">
+    <h3>Words we caught from each other</h3>
+    <p><em>Babah</em> was always yours. You’ve said it 790 times. But in 2024 I said it 247 times too, without ever noticing I’d picked it up. <em>Aladai</em> was mine. This year you’ve said it 53 times, and I’ve said it 32. Somewhere along the way, we swapped.</p>
+    <div class="vis slopes" id="v-words" data-gen=""></div>
+    <p class="cap">Some words never crossed over at all. You called things <em>sundor</em> 256 times; I said it three times. I said <em>cute</em> instead, 112 times.</p>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Our hour</h3>
+    <p>The busiest hour of the entire chat was midnight to one. In 2024, almost a quarter of everything we said was said after eleven at night. It’s still our hour now.</p>
+    <div class="clockwrap vis">
+      <svg class="clock" id="v-clock" data-gen="" viewBox="0 0 240 240" role="img" aria-label="Messages by hour of day"></svg>
+      <div>
+        <div class="toggle" id="clock-toggle" data-gen=""><button aria-pressed="true" data-y="2024">2024</button><button aria-pressed="false" data-y="2026">2026</button></div>
+        <p class="cap">Each spoke is one hour of the day, midnight at the top. Longer means we talked more then.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Under a minute</h3>
+    <p>When we were talking, we were really talking. In 2024, the usual gap between your message and my reply was eighteen seconds; mine to yours, thirty. Out of more than twenty-four thousand replies that year, only eighteen times did one of us wait more than a day for the other.</p>
+    <div class="vis race" id="v-race" data-gen=""></div>
+    <p class="cap">Typical time to reply once a conversation was going, 2024. Shown ten times faster than real life. <span class="btn" role="button" tabindex="0" id="race-play">Play again</span></p>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>The stretched letters</h3>
+    <p><em>Babahhh. Niceeee.</em> In 2024, about one in five of your messages had a letter stretched out like that, and one in six of mine. After January 2025 they nearly vanished. They’re slowly coming back.</p>
+    <div class="vis">
+      <div class="toggle" id="stretch-toggle" data-gen="">
+        <button aria-pressed="true" data-p="0">2024</button><button aria-pressed="false" data-p="1">early January 2025</button><button aria-pressed="false" data-p="2">the rest of 2025</button><button aria-pressed="false" data-p="3">2026</button>
+      </div>
+      <div class="stretch" id="v-stretch" data-gen=""></div>
+    </div>
+    <p class="cap">One thing I didn’t expect: in those first weeks of January 2025, you were still stretching yours. I had already stopped. If one of us went flat first, it was me.</p>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Four hundred and forty-nine calls</h3>
+    <p>About seventy-eight hours in all, most of them ten minutes on the way somewhere. The longest call we ever had was three hours, on 19 January 2025, trying to hold on. Our last call was five days later.</p>
+    <div class="vis wide" style="margin-top:1.4rem"><svg class="calls" id="v-calls" data-gen="" viewBox="0 0 736 160" role="img" aria-label="Every call from January 2024 to January 2025, by length"></svg></div>
+    <p class="cap">Every call, January 2024 to January 2025. Height is how long it lasted.</p>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Who laughed</h3>
+    <p>In 2024 you laughed in text almost three times as often as I did. This year, I’ve nearly caught up. I’ve been learning.</p>
+    <div class="vis pairs2" id="v-laugh" data-gen=""></div>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Almost exactly even</h3>
+    <p>In 2024 you started 170 of our conversations and I started 163. You said good morning first 152 times, I did 137 times. Nobody was chasing anybody. That’s what it looked like when it worked.</p>
+    <div class="vis pairs2" id="v-even" data-gen=""></div>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>What we were really talking about</h3>
+    <p>If you add it up, a surprising amount of us was food.</p>
+    <div class="vis receipt" id="v-menu" data-gen=""></div>
+  </div>
+
+  <div class="rv" data-anim="">
+    <h3>Paragraphs</h3>
+    <p>In all of 2024, we sent each other 38 messages longer than a paragraph. In 2026 so far, 45. We only learned to say long things after it ended.</p>
+    <div class="vis blocks" id="v-blocks" data-gen=""></div>
+  </div>
+</section>
+
+<section class="wrap" id="loop">
+  <h2>What went quiet</h2>
+  <p>We didn’t fight much. I think that was part of the problem. This is the pattern as I see it now. I’ve put my side of each step first, because most of the time, my side started it.</p>
+  <div class="loop">
+    <svg class="ringsvg" id="ring" data-gen="" viewBox="0 0 240 240" aria-label="A loop of six steps"></svg>
+    <div class="step" id="step" data-gen="" aria-live="polite"></div>
+  </div>
+  <div class="store" id="store-steps" data-label="The six steps of the loop (title, me, you)">
+    <div data-key="1"><p class="t">A story about someone else</p><p class="me">I’d bring up a friend’s relationship, a cousin’s wedding, someone’s surname, someone’s trip, and argue a side, as if it were just an idea.</p><p class="you">You heard a verdict on you. On your freedom, your plans, the kind of life you wanted.</p></div>
+    <div data-key="2"><p class="t">Why?</p><p class="me">I asked for reasons. Lots of them. I genuinely thought that was what talking was.</p><p class="you">Being asked to justify “I don’t want to” felt like being told your no wasn’t enough on its own.</p></div>
+    <div data-key="3"><p class="t">Valid, invalid</p><p class="me">I sorted your reasons out loud into ones I accepted and ones I didn’t.</p><p class="you">You started feeling like the odd one. Like your thoughts only counted once someone approved them.</p></div>
+    <div data-key="4"><p class="t">Okay, fine</p><p class="me">I took your agreement as agreement, and moved on, relieved.</p><p class="you">Sometimes you agreed just so the conversation would stop.</p></div>
+    <div data-key="5"><p class="t">Kept inside</p><p class="me">I told myself, and you, that we were on the same team, and believed it.</p><p class="you">It stayed with you. Every time it came up again, it got a little heavier.</p></div>
+    <div data-key="6"><p class="t">All at once</p><p class="me">From my side it looked sudden. I panicked and pushed harder: talk now, call me, let me come.</p><p class="you">From yours it was months old, and my pushing seemed to prove the fear right.</p></div>
+  </div>
+  <p style="margin-top:2rem">Neither of us built this on purpose. I fed it with questions; you fed it with silence. Mostly, I think, we were both trying not to hurt the other one. I called it a <em>chain of inexpressive behaviour</em> once, half joking. It’s still the most accurate thing I’ve said about us.</p>
+</section>
+
+<section class="wrap" id="under">
+  <h2>What was underneath</h2>
+  <p>Things we said, and what I think was under them. Mine I’m sure about. Yours are guesses, some of them built from things you’ve told me since. If I’ve got yours wrong, I would rather know than be right.</p>
+  <ul class="pairs">
+    <li><p class="who">Me, 8 January 2025</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">“Everything in this world has a reason, and I personally don’t buy it.”</p>
+        <p class="meant">If I couldn’t understand your reason, I couldn’t see how to keep us. I was scared, and I dressed the fear up as logic.</p>
+        <span class="cue">turn over</span></div></li>
+    <li><p class="who">You, the same day</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">“I don’t want to get married now is an enough reason.”</p>
+        <p class="meant">Please let my no be enough, just once, without a hearing.<span class="later">You said it to me later, plainly: sometimes just “yeah it’s fine, we can wait” is what’s needed. Not always questions.</span></p>
+        <span class="cue">turn over</span></div></li>
+    <li><p class="who">Me, 7 January 2025</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">“I feel a distance.”</p>
+        <p class="meant">This was the one completely true sentence I said that month. I should have stayed with it, said “I miss you, and I’m scared,” and stopped there, instead of turning it into questions.</p>
+        <span class="cue">turn over</span></div></li>
+    <li><p class="who">You, 8 January 2025</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">“I want to be alone for a month.”</p>
+        <p class="meant">My guess: I need room to hear myself, and I can’t hear myself when every conversation turns into a negotiation.</p>
+        <span class="cue">turn over</span></div></li>
+    <li><p class="who">You, 16 January 2025</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">“Maybe I am just trapping you here.”</p>
+        <p class="meant">My guess: I’m afraid of becoming the reason you and your family don’t get what you hoped for, and I don’t think I can carry that guilt.<span class="later">I never once felt trapped. I wish I had said that in a way you could believe, instead of arguing about years.</span></p>
+        <span class="cue">turn over</span></div></li>
+    <li><p class="who">Me, late January 2025</p>
+      <div class="turn" role="button" tabindex="0" aria-pressed="false">
+        <p class="said">The worst thing I said. I’m not going to quote it here. You know the one.</p>
+        <p class="meant">It came from an old wound that had nothing to do with you, and you were the one who had to hear it. I’m sorry. Not as a step towards anything. Just sorry.</p>
+        <span class="cue">turn over</span></div></li>
+  </ul>
+</section>
+
+<section class="wrap" id="forks">
+  <h2>Where it could have turned</h2>
+  <p>Not to rewrite anything. Just to see the places where one sentence, said differently, might have changed the direction.</p>
+  <ol class="forks">
+    <li class="good"><p class="date">February 2024</p>
+      <p>You were away on a trip, I felt forgotten, and said it sideways. Within a day, we’d talked it through. You noticed I sometimes need a nudge to say what I feel; I said that missing someone out loud isn’t selfish.</p>
+      <details><summary>and what that shows</summary><p>This one went right. I want it here anyway, because it proves we could do this. We did it when it was small.</p></details></li>
+    <li><p class="date">Through 2024</p>
+      <p>The marriage conversation came up, by your count, every couple of days. Often through someone else’s story: a cousin, a friend, a surname, a wedding.</p>
+      <details><summary>what could have happened</summary><p>One sentence would have done it: “Okay. We can wait.” I had it in me. I just thought discussing something was the same as caring about it.</p></details></li>
+    <li><p class="date">4 January 2025</p>
+      <p>When the February plans got complicated, I told you that you never listen to me, and that I genuinely didn’t want this.</p>
+      <details><summary>what could have happened</summary><p>The actual feeling was “I’ll miss you.” That’s all I needed to say.</p></details></li>
+    <li><p class="date">8 January 2025</p>
+      <p>You finally said everything you’d been holding, in one long message. I answered with a cross-examination.</p>
+      <details><summary>what could have happened</summary><p>“Thank you for telling me. I hear you. I’m sorry it took this long for you to feel you could.” And then nothing else for a while. Just being there.</p></details></li>
+    <li><p class="date">18 January 2025</p>
+      <p>I understood, finally, that I’d been inconsiderate, and I said so. It was true. It was also late; you were already exhausted.</p>
+      <details><summary>what could have happened</summary><p>The same words, three months earlier. And talking to my own family then, not after.</p></details></li>
+    <li><p class="date">22 to 30 January 2025</p>
+      <p>You asked for space and I couldn’t give it. I kept calling. I came to Bangalore after you’d asked me not to.</p>
+      <details><summary>what could have happened</summary><p>Respect the no. Write once. Wait. I know now that what felt like fighting for us was, from where you were standing, more weight on something already too heavy.</p></details></li>
+    <li><p class="date">Around the same time</p>
+      <p>And one from your side, if you’ll let me include it, only because you’ve said it yourself since: there was an evening you saw me with a friend you didn’t know, and you decided not to ask.</p>
+      <details><summary>what could have happened</summary><p>You’ve said you wish you’d confronted things more directly. I wish I’d made asking feel safe enough that you would have. That part is on me as much as you.</p></details></li>
+  </ol>
+</section>
+
+<section class="wrap" id="now">
+  <h2>What I understand now</h2>
+  <p>That I was never really fighting about marriage. Marriage was just the only picture I had of <em>we stay</em>. When you said not yet, I heard not ever, and I panicked in the most logical-sounding way I could.</p>
+  <p>That my family was my conversation to have, early and plainly, and I let it leak onto your shoulders instead. You told me that long before I did anything about it.</p>
+  <p>That you never owed me reasons. That space isn’t a verdict. That your independence was one of the first things I loved about you, so I don’t get to resent it when it applies to me.</p>
+  <p>And that I don’t think you broke us, and I don’t think I did alone either. I think two people who loved each other got scared in opposite directions. I moved closer; you moved away; and each move frightened the other more.</p>
+  <p class="quiet">You said something at Bijoya last year that I’ve thought about more than almost anything: people don’t fall out of love, people create distance. I think we both did. Just differently.</p>
+</section>
+
+<section class="wrap" id="ifever">
+  <h2>If we ever chose to try again</h2>
+  <p>This isn’t an ask. It’s just what I would bring, if you ever wanted it. Small things, because the small things were always what worked for us.</p>
+  <ul class="ifever">
+    <li><b>Your no is enough.</b>When you say you don’t want something, I’ll say <em>thik ache, we can wait</em>, and mean it, without a follow-up question.</li>
+    <li><b>Marriage isn’t on the table.</b>Not on a timeline, not in a debate, not through anyone else’s story. If it ever comes up, it’ll be because you brought it up.</li>
+    <li><b>My family is my conversation.</b>I'll not dump every conversation as it is; no matter how much transparent we are, I have to be remembered that things can get conveyed very differently than how it actually is.</li>
+    <li><b>No more arguing through other people.</b>If I have a feeling about us, I’ll say it about us.</li>
+    <li><b>I’ll ask before I come.</b>Every time. Even for cha. Especially for cha.</li>
+    <li><b>Space means space.</b>If you need quiet, I’ll tell you once what I’m feeling, “I miss you, I’m a little scared,” and then actually leave you the room.</li>
+    <li><b>Say it while it’s small.</b>You told me fighting is important, for real. Let’s fight small and kind, on the day it happens, and then go get momo.<span class="inv">This one is an invitation, not a condition. It’s my job to make it feel safe enough to be worth it.</span></li>
+    
+  </ul>
+</section>
+
+<section class="wrap close">
+  <p>I don’t know if we’ll ever try. I’ve made a kind of peace with not knowing. You said once that when your thoughts feel steady, you’d tell me you’re ready to meet. That’s still yours to say, whenever you want to, and it’s okay if you never do.</p>
+  <p>Whatever you decide, I’m glad it was you. Thank you for all of it, the seventy-six thousand messages and the years before the chat got deleted.</p>
+  <p class="sign">— A</p>
+</section>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var EDIT = /edit/i.test(location.hash) || /[?&]edit\b/i.test(location.search);
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = "http://www.w3.org/2000/svg";
+
+  // remember every generated area exactly as written, so "save" can put it back
+  var genInitial = new Map();
+  document.querySelectorAll('[data-gen]').forEach(function(n){ genInitial.set(n, n.innerHTML); });
+
+  function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  function store(id,key){ var n=document.querySelector('#'+id+' [data-key="'+key+'"]'); return n ? n.innerHTML : ''; }
+  function activate(node, fn){
+    node.addEventListener('click', function(e){ if(EDIT) return; fn(e); });
+    node.addEventListener('keydown', function(e){ if(EDIT) return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fn(e);} });
+  }
+  function fmt(n){ return n.toLocaleString('en-IN'); }
+
+  /* ---------- memories ---------- */
+  var memBox = document.getElementById('memory');
+  var threads = document.querySelectorAll('.thread');
+  threads.forEach(function(b){ activate(b, function(){
+    var open = b.getAttribute('aria-expanded')==='true';
+    threads.forEach(function(t){ t.setAttribute('aria-expanded','false'); });
+    if(open){ memBox.innerHTML = genInitial.get(memBox); return; }
+    b.setAttribute('aria-expanded','true');
+    memBox.innerHTML = '<p>'+store('store-memories', b.dataset.m)+'</p>';
+  }); });
+
+  /* ---------- month chart ---------- */
+  var data = [["2024-01",4374,33,3.0],["2024-02",6471,46,7.5],["2024-03",5653,50,8.6],["2024-04",3052,34,3.3],["2024-05",3180,42,6.7],["2024-06",3271,45,5.1],["2024-07",3094,55,8.3],["2024-08",2418,36,4.3],["2024-09",3376,50,6.2],["2024-10",5648,62,7.4],["2024-11",6232,63,4.4],["2024-12",4020,58,6.9],["2025-01",1790,31,6.1],["2025-02",183,0,0],["2025-03",855,0,0],["2025-04",3,0,0],["2025-05",5,0,0],["2025-06",8,0,0],["2025-07",0,0,0],["2025-08",16,0,0],["2025-09",75,0,0],["2025-10",842,0,0],["2025-11",3,0,0],["2025-12",141,0,0],["2026-01",4162,1,0],["2026-02",2163,1,0],["2026-03",1162,0,0],["2026-04",2450,5,0],["2026-05",1808,1,0],["2026-06",761,0,0],["2026-07",3249,0,0],["2026-08",2031,2,0],["2026-09",3267,0,0],["2026-10",648,0,0]];
+  var monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var svg=document.getElementById('chart');
+  var W=736, top=18, base=188, gmY=208, padL=8, padR=8, max=6600;
+  var step=(W-padL-padR)/(data.length-1);
+  function x(i){return padL+i*step;} function y(v){return base-(v/max)*(base-top);}
+  var pts=data.map(function(d,i){return [x(i),y(d[1])];});
+  var dd='M'+pts[0][0]+','+pts[0][1];
+  for(var i=0;i<pts.length-1;i++){
+    var p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2,t=.18;
+    var c1y=Math.min(base,p1[1]+(p2[1]-p0[1])*t), c2y=Math.min(base,p2[1]-(p3[1]-p1[1])*t);
+    dd+=' C'+(p1[0]+(p2[0]-p0[0])*t)+','+c1y+' '+(p2[0]-(p3[0]-p1[0])*t)+','+c2y+' '+p2[0]+','+p2[1];
+  }
+  svg.appendChild(el('line',{class:'base',x1:padL,x2:W-padR,y1:base,y2:base}));
+  ["2024","2025","2026"].forEach(function(yr){
+    var i=data.findIndex(function(d){return d[0].indexOf(yr)===0;});
+    svg.appendChild(el('line',{class:'tick',x1:x(i),x2:x(i),y1:base,y2:base+6}));
+    var tx=el('text',{class:'year',x:x(i)+4,y:base+42}); tx.textContent=yr; svg.appendChild(tx);
+  });
+  var area=el('path',{class:'area',d:dd+' L'+x(data.length-1)+','+base+' L'+x(0)+','+base+' Z'}); svg.appendChild(area);
+  var line=el('path',{class:'line',d:dd}); svg.appendChild(line);
+  data.forEach(function(d,i){ if(d[2]>0) svg.appendChild(el('circle',{class:'gm',cx:x(i),cy:gmY,r:Math.max(1.2,Math.sqrt(d[2])*.42)})); });
+  data.forEach(function(d,i){ if(store('store-notes',d[0])) svg.appendChild(el('circle',{class:'mark',cx:x(i),cy:y(d[1]),r:4})); });
+  var cursor=el('line',{class:'cursor',x1:0,x2:0,y1:top-6,y2:gmY+8,opacity:0}), sel=el('circle',{class:'sel',cx:0,cy:0,r:5,opacity:0});
+  svg.appendChild(cursor); svg.appendChild(sel);
+  if(!reduce && !EDIT){
+    var len=line.getTotalLength(); line.style.strokeDasharray=len; line.style.strokeDashoffset=len; area.style.opacity=0;
+    onVisible(svg,function(){ line.style.transition='stroke-dashoffset 3.2s cubic-bezier(.45,.05,.3,1)'; line.style.strokeDashoffset=0; area.style.transition='opacity 1.2s ease 2.6s'; area.style.opacity=1; },.5);
+  }
+  var readout=document.getElementById('readout'), current=-1;
+  function show(i){
+    if(i<0||i>=data.length) return; current=i; var d=data[i], parts=d[0].split('-');
+    cursor.setAttribute('x1',x(i)); cursor.setAttribute('x2',x(i)); cursor.setAttribute('opacity',1);
+    sel.setAttribute('cx',x(i)); sel.setAttribute('cy',y(d[1])); sel.setAttribute('opacity',1);
+    var nums = d[1]===0 ? 'no messages' : fmt(d[1])+(d[1]===1?' message':' messages');
+    if(d[2]>0) nums+=', '+d[2]+' good morning'+(d[2]>1?'s':'');
+    if(d[3]>0) nums+=', about '+d[3]+' hours on calls';
+    var note=store('store-notes',d[0]);
+    readout.innerHTML='<p class="when">'+monthNames[+parts[1]-1]+' '+parts[0]+'</p>'+(note?'<p>'+note+'</p>':'')+'<p class="nums">'+nums+'</p>';
+  }
+  function idx(ev){ var r=svg.getBoundingClientRect(); var px=((ev.clientX-r.left)/r.width)*W; return Math.max(0,Math.min(data.length-1,Math.round((px-padL)/step))); }
+  svg.addEventListener('pointermove',function(e){show(idx(e));});
+  svg.addEventListener('pointerdown',function(e){show(idx(e));});
+  svg.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'){e.preventDefault();show(current<0?0:Math.min(data.length-1,current+1));}
+    if(e.key==='ArrowLeft'){e.preventDefault();show(current<0?data.length-1:Math.max(0,current-1));}
+  });
+
+  /* ---------- reveal-on-scroll helper ---------- */
+  function onVisible(node,fn,th){
+    if(!('IntersectionObserver' in window)){ fn(); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); setTimeout(fn,150); } }); },{threshold:0,rootMargin:'0px 0px -25% 0px'});
+    io.observe(node);
+  }
+  document.querySelectorAll('[data-anim]').forEach(function(n){
+    if(reduce||EDIT){ n.classList.add('in'); } else onVisible(n.querySelector('.vis')||n,function(){ n.classList.add('in'); });
+  });
+
+  /* ---------- 1. words we caught ---------- */
+  (function(){
+    // [word, you 2024, me 2024, you 2026, me 2026]
+    var W2=[["babah",569,247,204,40],["aladai",57,221,53,32]];
+    var box=document.getElementById('v-words'), h='';
+    W2.forEach(function(w){
+      var mx=Math.max(w[1],w[2],w[3],w[4]), X1=70, X2=250, T=34, B=196;
+      function Y(v){ return B-(v/mx)*(B-T); }
+      var g='<svg viewBox="0 0 320 236" role="img" aria-label="How often each of us said '+w[0]+' in 2024 and 2026">'+
+        '<text class="wd" x="160" y="16">'+w[0]+'</text>'+
+        '<line class="ax" x1="'+X1+'" x2="'+X1+'" y1="'+(T-6)+'" y2="'+(B+6)+'"/><line class="ax" x1="'+X2+'" x2="'+X2+'" y1="'+(T-6)+'" y2="'+(B+6)+'"/>'+
+        '<text class="yr" x="'+X1+'" y="224">2024</text><text class="yr" x="'+X2+'" y="224">2026</text>';
+      [[w[1],w[3],'you','y'],[w[2],w[4],'me','m']].forEach(function(l){
+        var y1=Y(l[0]), y2=Y(l[1]);
+        g+='<line class="sl '+l[3]+'" style="stroke-dasharray:'+Math.hypot(X2-X1,y2-y1)+';stroke-dashoffset:'+(reduce||EDIT?0:Math.hypot(X2-X1,y2-y1))+'" x1="'+X1+'" y1="'+y1+'" x2="'+X2+'" y2="'+y2+'"/>'+
+           '<circle class="pt '+l[3]+'" cx="'+X1+'" cy="'+y1+'" r="4"/><circle class="pt '+l[3]+' late" cx="'+X2+'" cy="'+y2+'" r="4"/>'+
+           '<text class="vl" x="'+(X1-10)+'" y="'+(y1+4)+'" text-anchor="end">'+l[2]+' '+l[0]+'</text>'+
+           '<text class="vl late" x="'+(X2+10)+'" y="'+(y2+4)+'">'+l[1]+'</text>';
+      });
+      h+=g+'</svg>';
+    });
+    box.innerHTML=h;
+    onVisible(box,function(){ box.querySelectorAll('.sl').forEach(function(l){ l.style.strokeDashoffset=0; }); });
+  })();
+
+  /* ---------- 2. clock ---------- */
+  var hours={
+    "2024":[10.5,5.4,1.7,0.2,0.2,0.0,0.1,0.1,0.4,1.1,4.4,6.2,6.6,5.6,5.0,5.1,4.7,4.6,5.4,6.3,6.2,5.2,6.3,8.7],
+    "2026":[7.8,4.4,1.9,0.1,0.0,0.0,0.0,0.1,0.1,0.4,3.3,5.5,5.9,5.2,3.8,6.3,7.2,7.2,6.3,6.3,6.7,7.3,5.8,8.3]
+  };
+  var clock=document.getElementById('v-clock'), CX=120, CY=120, R0=38, RL=54, spokes=[], curVals=hours["2024"].map(function(){return 0;});
+  clock.appendChild(el('circle',{class:'ring',cx:CX,cy:CY,r:R0-6}));
+  [["midnight",0],["6 am",6],["noon",12],["6 pm",18]].forEach(function(l){
+    var a=l[1]/24*2*Math.PI-Math.PI/2, rr=RL+R0+16;
+    var tx=el('text',{x:CX+rr*Math.cos(a),y:CY+rr*Math.sin(a)}); tx.textContent=l[0]; clock.appendChild(tx);
+  });
+  var bigT=el('text',{class:'big',x:CX,y:CY-6}); var smT=el('text',{x:CX,y:CY+14});
+  clock.appendChild(bigT); clock.appendChild(smT);
+  for(var hh=0;hh<24;hh++){ var s=el('line',{class:'bar'}); clock.appendChild(s); spokes.push(s); }
+  function drawClock(v){
+    v.forEach(function(val,h){ var a=h/24*2*Math.PI-Math.PI/2, r1=R0, r2=R0+Math.max(.5,val/10.5*RL);
+      spokes[h].setAttribute('x1',CX+r1*Math.cos(a)); spokes[h].setAttribute('y1',CY+r1*Math.sin(a));
+      spokes[h].setAttribute('x2',CX+r2*Math.cos(a)); spokes[h].setAttribute('y2',CY+r2*Math.sin(a)); });
+  }
+  function clockTo(yr){
+    var target=hours[yr], from=curVals.slice(), t0=null, dur=reduce?1:900;
+    var late=target[23]+target[0]+target[1];
+    bigT.textContent=Math.round(late)+'%'; smT.textContent='after 11 pm';
+    function f(ts){ if(!t0)t0=ts; var k=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-k,3);
+      curVals=from.map(function(a,i){return a+(target[i]-a)*e;}); drawClock(curVals); if(k<1) requestAnimationFrame(f); }
+    requestAnimationFrame(f);
+  }
+  drawClock(curVals);
+  onVisible(clock,function(){ clockTo("2024"); });
+  document.querySelectorAll('#clock-toggle button').forEach(function(b){ b.addEventListener('click',function(){
+    document.querySelectorAll('#clock-toggle button').forEach(function(o){o.setAttribute('aria-pressed',o===b?'true':'false');});
+    clockTo(b.dataset.y);
+  }); });
+
+  /* ---------- 3. reply race ---------- */
+  var race=[["me",18],["you",30]];
+  var raceBox=document.getElementById('v-race');
+  raceBox.innerHTML=race.map(function(r){ return '<div class="row"><span class="lab">'+r[0]+'</span><span class="track"><span class="fill"></span><span class="dot"></span></span><span class="t tab">0s</span></div>'; }).join('');
+  var raceRun=0;
+  function runRace(){
+    var id=++raceRun, rows=raceBox.querySelectorAll('.row'), t0=null, maxS=30;
+    function f(ts){ if(id!==raceRun) return; if(!t0)t0=ts; var el=(ts-t0)/1000*10, done=true;
+      rows.forEach(function(row,i){ var s=race[i][1], v=Math.min(s,el), pct=v/maxS*100;
+        row.querySelector('.fill').style.width=pct+'%'; row.querySelector('.dot').style.left=pct+'%';
+        row.querySelector('.t').textContent=Math.floor(v)+'s'; if(v<s) done=false; });
+      if(!done) requestAnimationFrame(f); }
+    if(reduce){ rows.forEach(function(row,i){ var p=race[i][1]/30*100; row.querySelector('.fill').style.width=p+'%'; row.querySelector('.dot').style.left=p+'%'; row.querySelector('.t').textContent=race[i][1]+'s'; }); return; }
+    requestAnimationFrame(f);
+  }
+  onVisible(raceBox,runRace,.6);
+  activate(document.getElementById('race-play'),runRace);
+
+  /* ---------- 4. stretched letters ---------- */
+  // share of messages with a stretched letter: [you, me]
+  var stretchP=[[21.1,16.1],[12.7,2.6],[0.7,1.1],[6.1,4.9]];
+  var sBox=document.getElementById('v-stretch');
+  function word(base,ch,id){ var h='<span class="word" id="'+id+'">'+base; for(var i=0;i<8;i++) h+='<span class="x">'+ch+'</span>'; return h+'<span class="who"></span></span>'; }
+  sBox.innerHTML=word('Babah','h','sw-you')+word('Nice','e','sw-me');
+  function stretchTo(p){
+    [['sw-you',0,'you'],['sw-me',1,'me']].forEach(function(w){
+      var pct=stretchP[p][w[1]], n=Math.min(8,Math.round(pct/2.6)), node=document.getElementById(w[0]);
+      node.querySelectorAll('.x').forEach(function(x,i){ x.classList.toggle('on', i<n); });
+      node.querySelector('.who').textContent=w[2]+', '+pct+'%';
+    });
+  }
+  stretchTo(3); onVisible(sBox,function(){ setTimeout(function(){stretchTo(0);},300); });
+  document.querySelectorAll('#stretch-toggle button').forEach(function(b){ b.addEventListener('click',function(){
+    document.querySelectorAll('#stretch-toggle button').forEach(function(o){o.setAttribute('aria-pressed',o===b?'true':'false');});
+    stretchTo(+b.dataset.p);
+  }); });
+
+  /* ---------- 5. calls ---------- */
+  var calls=[[13.73,4.0],[13.74,16.0],[14.85,20.0],[15.8,0.7],[18.76,3.0],[18.76,12.0],[22.48,0.6],[27.64,3.0],[27.7,60.0],[28.78,23.0],[30.98,15.0],[30.99,21.0],[31.71,14.0],[31.92,15.0],[37.65,120.0],[38.85,11.0],[39.97,60.0],[41.59,1.0],[45.49,2.0],[45.49,24.0],[46.52,60.0],[47.5,2.0],[47.58,0.7],[49.86,1.0],[49.87,0.8],[50.85,11.0],[50.88,32.0],[51.74,8.0],[53.85,15.0],[53.89,6.0],[57.93,17.0],[57.96,0.4],[57.98,3.0],[57.99,44.0],[60.6,5.0],[61.0,1.0],[61.12,24.0],[61.45,18.0],[61.51,0.4],[61.52,5.0],[65.52,10.0],[65.52,2.0],[66.76,15.0],[69.8,3.0],[71.99,0.7],[72.74,1.0],[73.01,15.0],[73.84,120.0],[73.91,12.0],[74.02,46.0],[75.61,0.1],[75.61,1.0],[75.62,0.5],[75.83,11.0],[75.94,4.0],[76.57,0.3],[76.57,1.0],[76.79,26.0],[76.95,3.0],[77.93,25.0],[78.87,18.0],[79.91,15.0],[79.92,9.0],[81.76,17.0],[81.86,0.6],[81.93,2.0],[81.95,2.0],[82.51,3.0],[82.51,8.0],[83.58,2.0],[83.89,1.0],[84.85,2.0],[84.86,0.2],[84.88,0.9],[85.45,2.0],[86.71,3.0],[86.71,58.0],[86.98,3.0],[87.04,4.0],[87.63,3.0],[89.01,4.0],[89.04,9.0],[92.89,0.2],[93.76,6.0],[98.87,32.0],[99.8,23.0],[99.84,13.0],[100.86,3.0],[101.54,9.0],[102.53,0.6],[102.74,0.5],[102.87,15.0],[103.85,0.3],[109.95,2.0],[110.63,8.0],[111.01,0.4],[113.74,20.0],[113.81,4.0],[114.5,7.0],[114.87,0.4],[115.87,0.5],[117.8,0.2],[119.8,6.0],[120.74,5.0],[120.96,41.0],[121.49,8.0],[121.76,1.0],[121.82,4.0],[121.86,0.2],[122.77,2.0],[122.79,0.9],[122.88,3.0],[122.89,0.9],[122.94,0.1],[124.37,0.2],[125.59,2.0],[125.74,0.8],[125.78,0.2],[127.75,3.0],[127.75,14.0],[128.9,32.0],[129.81,18.0],[130.83,1.0],[130.83,28.0],[134.75,5.0],[135.78,0.8],[138.89,18.0],[139.55,3.0],[139.87,43.0],[140.8,3.0],[140.84,30.0],[141.81,19.0],[142.0,22.0],[142.86,1.0],[142.89,0.2],[142.89,0.7],[143.97,33.0],[144.76,1.0],[145.98,26.0],[146.01,0.5],[147.97,6.0],[148.8,4.0],[149.88,42.0],[150.81,27.0],[153.59,5.0],[154.46,3.0],[154.81,15.0],[154.91,11.0],[155.56,10.0],[155.6,5.0],[155.81,19.0],[155.85,2.0],[155.85,10.0],[157.84,6.0],[157.88,10.0],[158.87,25.0],[159.63,4.0],[159.81,0.0],[161.92,7.0],[162.65,3.0],[162.67,1.0],[163.5,0.5],[163.5,6.0],[164.84,10.0],[166.56,4.0],[166.81,2.0],[167.1,1.0],[167.8,0.6],[168.75,0.7],[169.91,3.0],[170.79,5.0],[170.8,6.0],[170.81,46.0],[170.84,2.0],[172.84,0.6],[175.51,16.0],[177.75,17.0],[177.78,1.0],[178.03,19.0],[179.48,2.0],[179.83,23.0],[180.54,2.0],[180.57,2.0],[180.59,0.3],[182.49,2.0],[183.97,7.0],[184.81,13.0],[186.7,0.2],[186.86,1.0],[186.87,5.0],[189.52,2.0],[191.83,1.0],[191.87,6.0],[192.74,2.0],[194.63,0.2],[194.63,3.0],[196.68,21.0],[196.9,19.0],[196.92,7.0],[197.67,24.0],[197.7,34.0],[197.89,0.6],[198.7,18.0],[199.74,3.0],[199.75,22.0],[201.61,0.2],[201.61,14.0],[203.54,22.0],[203.8,13.0],[203.81,4.0],[203.91,9.0],[205.49,0.5],[205.51,6.0],[205.63,21.0],[205.88,1.0],[205.88,4.0],[206.56,8.0],[206.76,7.0],[206.97,60.0],[207.5,0.7],[207.5,3.0],[207.8,0.6],[208.49,2.0],[208.53,22.0],[208.81,10.0],[208.85,1.0],[208.95,3.0],[209.71,36.0],[209.74,1.0],[210.64,49.0],[210.89,3.0],[211.7,0.7],[211.81,1.0],[212.89,7.0],[213.9,7.0],[213.96,2.0],[214.88,1.0],[220.88,0.5],[221.04,6.0],[221.95,2.0],[224.98,7.0],[224.99,15.0],[225.87,6.0],[226.52,0.3],[226.76,11.0],[226.78,5.0],[226.82,1.0],[229.06,0.3],[231.77,7.0],[231.88,0.1],[231.88,38.0],[232.74,46.0],[233.92,1.0],[235.78,9.0],[235.78,13.0],[235.81,0.3],[235.81,10.0],[235.88,5.0],[235.89,2.0],[236.46,0.5],[236.49,11.0],[239.5,2.0],[240.84,23.0],[241.8,19.0],[241.82,8.0],[241.88,0.3],[244.52,4.0],[244.69,0.7],[247.9,0.1],[248.01,6.0],[248.61,0.7],[248.87,1.0],[252.58,3.0],[252.77,0.8],[252.78,5.0],[254.68,12.0],[255.79,9.0],[255.81,9.0],[256.5,1.0],[256.83,18.0],[257.52,10.0],[257.52,0.8],[257.59,0.6],[257.6,0.1],[257.61,0.2],[258.72,45.0],[258.75,8.0],[258.77,3.0],[258.78,7.0],[259.0,3.0],[259.97,120.0],[262.43,0.3],[262.47,1.0],[262.54,7.0],[262.74,0.1],[262.74,8.0],[262.84,5.0],[262.87,13.0],[262.89,2.0],[266.82,22.0],[267.47,0.0],[267.47,0.7],[269.76,5.0],[269.83,16.0],[270.8,5.0],[270.84,0.8],[270.88,0.3],[272.83,20.0],[274.62,7.0],[275.01,6.0],[275.29,2.0],[275.3,2.0],[275.3,2.0],[275.3,0.8],[276.42,1.0],[276.86,2.0],[277.6,0.8],[277.86,2.0],[277.93,11.0],[278.52,6.0],[278.64,0.6],[278.65,0.5],[278.73,0.7],[280.93,18.0],[281.79,3.0],[281.79,3.0],[281.88,1.0],[282.6,0.6],[282.83,0.3],[284.93,0.5],[285.7,36.0],[287.58,12.0],[288.01,120.0],[288.8,28.0],[290.67,31.0],[291.67,7.0],[292.98,8.0],[294.08,54.0],[297.98,0.7],[299.57,2.0],[301.02,54.0],[301.74,18.0],[302.85,0.2],[303.54,0.8],[303.54,2.0],[306.56,3.0],[307.97,4.0],[309.51,3.0],[309.85,40.0],[309.91,1.0],[309.94,50.0],[310.03,6.0],[310.73,3.0],[310.74,3.0],[310.83,1.0],[310.83,5.0],[310.84,2.0],[310.84,1.0],[311.04,13.0],[311.55,2.0],[311.74,18.0],[312.57,9.0],[313.58,6.0],[313.6,2.0],[314.49,4.0],[314.78,2.0],[314.82,5.0],[315.8,0.2],[315.91,15.0],[316.83,0.1],[317.53,2.0],[320.76,5.0],[324.68,2.0],[324.7,31.0],[324.9,1.0],[325.79,9.0],[325.86,8.0],[325.87,1.0],[325.88,4.0],[325.91,0.7],[327.83,0.1],[327.87,4.0],[338.47,10.0],[338.99,45.0],[344.76,0.6],[344.96,60.0],[346.54,1.0],[346.54,8.0],[347.73,2.0],[348.85,1.0],[348.96,7.0],[349.67,4.0],[349.81,0.9],[349.93,0.6],[350.81,7.0],[350.93,0.1],[350.93,2.0],[351.79,8.0],[351.86,2.0],[351.86,1.0],[351.87,5.0],[351.88,18.0],[351.89,0.8],[353.53,32.0],[354.53,2.0],[355.72,8.0],[355.76,0.5],[355.79,3.0],[356.92,12.0],[357.83,3.0],[357.84,2.0],[357.84,16.0],[357.85,21.0],[358.04,13.0],[358.47,0.3],[358.68,19.0],[358.7,0.4],[358.71,0.2],[358.72,2.0],[358.79,32.0],[359.63,18.0],[359.98,0.8],[360.01,9.0],[360.84,8.0],[360.84,0.6],[361.51,4.0],[361.6,1.0],[362.6,1.0],[362.62,13.0],[362.63,9.0],[365.91,0.9],[365.91,0.8],[366.0,0.5],[366.49,10.0],[366.49,5.0],[366.5,0.5],[371.99,11.0],[372.83,0.1],[372.83,0.1],[372.84,10.0],[372.85,2.0],[375.56,12.0],[378.49,8.0],[378.5,8.0],[379.68,0.9],[384.88,180.0],[386.91,27.0],[387.0,60.0],[389.8,33.0]];
+  var cs=document.getElementById('v-calls'), mob=window.innerWidth<600, cH=mob?300:160, cB=cH-32, cMax=180, cW=736, days=392, fz=mob?28:15;
+  cs.setAttribute('viewBox','0 0 '+cW+' '+cH);
+  cs.appendChild(el('line',{x1:0,x2:cW,y1:cB,y2:cB}));
+  var defs=el('defs',{}), cp=el('clipPath',{id:'callclip'}), cr=el('rect',{x:0,y:0,width:(reduce||EDIT)?cW:0,height:cH});
+  cp.appendChild(cr); defs.appendChild(cp); cs.appendChild(defs);
+  var cg=el('g',{'clip-path':'url(#callclip)'}); cs.appendChild(cg);
+  calls.forEach(function(c,i){
+    var h=Math.max(1.5,Math.sqrt(c[1]/cMax)*(cB-36)), xx=c[0]/days*(cW-8)+2, hi=c[1]>=180;
+    var r=el('rect',{x:xx,y:cB-h,width:hi?(mob?5:3):(mob?2.4:1.6),height:h}); if(hi) r.setAttribute('class','hi');
+    cg.appendChild(r);
+  });
+  [["Jan 2024",0],["Jul 2024",182],["Jan 2025",366]].forEach(function(l){ var tx=el('text',{x:l[1]>300?cW-2:l[1]/days*(cW-8)+2,y:cB+(mob?30:24),'text-anchor':l[1]>300?'end':'start',style:'font-size:'+fz+'px'}); tx.textContent=l[0]; cs.appendChild(tx); });
+  onVisible(cs,function(){ var t0=null; function f(ts){ if(!t0)t0=ts; var k=Math.min(1,(ts-t0)/2600); cr.setAttribute('width',cW*(1-Math.pow(1-k,2))); if(k<1) requestAnimationFrame(f); } requestAnimationFrame(f); });
+  var hx=384.88/days*(cW-8)+2; var lab=el('text',{class:'hl',x:hx-8,y:fz+2,'text-anchor':'end',style:'font-size:'+fz+'px'}); lab.textContent=mob?'19 Jan 2025, 3 hours':'19 January 2025, three hours'; cs.appendChild(lab);
+
+  /* ---------- 6 & 7. split bars ---------- */
+  function splits(id,rows){
+    document.getElementById(id).innerHTML=rows.map(function(r){ var tot=r[1]+r[2];
+      return '<div><p class="yr">'+r[0]+'</p><div class="split"><div class="a" style="width:'+(100*r[1]/tot)+'%"></div><div class="b" style="width:'+(100*r[2]/tot)+'%"></div></div><div class="split-l tab"><span>you, '+fmt(r[1])+'</span><span>me, '+fmt(r[2])+'</span></div></div>'; }).join('');
+  }
+  splits('v-laugh',[["Laughing in 2024 (haha, 🤣, 😂)",751,263],["Laughing in 2026 so far",505,462]]);
+  splits('v-even',[["Who started the conversation, 2024",170,163],["Who said good morning first, 2024",152,137]]);
+
+  /* ---------- 8. menu ---------- */
+  var menu=[["Cha",216],["Chicken",148],["Beer",130],["Mach",116],["Mutton",93],["Biryani",78],["Chingri",76],["Dim",63],["Mishti",46],["Luchi",29],["Momo",15]];
+  document.getElementById('v-menu').innerHTML='<p class="top">Two people, January 2024 to now</p><ul>'+menu.map(function(m){return '<li><span>'+m[0]+'</span><span class="dots"></span><span class="tab">'+m[1]+'</span></li>';}).join('')+
+    '</ul><ul class="sum"><li><span>“Ki kheli?”</span><span class="dots"></span><span class="tab">58</span></li><li><span>“Pouchechis?”</span><span class="dots"></span><span class="tab">214</span></li></ul>';
+
+  /* ---------- 9. paragraphs ---------- */
+  (function(){
+    function sq(n,cls){ var h='<div class="sq '+cls+'">'; for(var i=0;i<n;i++) h+='<i style="transition-delay:'+(i*0.03)+'s"></i>'; return h+'</div>'; }
+    document.getElementById('v-blocks').innerHTML='<div><p class="yr">All of 2024, out of about 48,000 messages</p>'+sq(38,'')+'</div><div><p class="yr">2026 so far, out of about 21,000</p>'+sq(45,'m')+'</div>';
+  })();
+
+  /* ---------- loop ---------- */
+  var ring=document.getElementById('ring'), lcx=120, lcy=120, LR=92, nodes=[], stepBox=document.getElementById('step'), si=0, NSTEPS=6;
+  ring.appendChild(el('circle',{class:'track',cx:lcx,cy:lcy,r:LR}));
+  var c1=el('text',{class:'center',x:lcx,y:lcy-4}); c1.textContent='and then,'; ring.appendChild(c1);
+  var c2=el('text',{class:'center',x:lcx,y:lcy+13}); c2.textContent='around again'; ring.appendChild(c2);
+  function stepPart(i,cls){ var n=document.querySelector('#store-steps [data-key="'+(i+1)+'"] .'+cls); return n?n.innerHTML:''; }
+  for(var k=0;k<NSTEPS;k++){ (function(i){
+    var a=-Math.PI/2+i*(2*Math.PI/NSTEPS), g=el('g',{class:'node',tabindex:0,role:'button','aria-label':'Step '+(i+1)});
+    g.appendChild(el('circle',{cx:lcx+LR*Math.cos(a),cy:lcy+LR*Math.sin(a),r:15}));
+    var tx=el('text',{x:lcx+LR*Math.cos(a),y:lcy+LR*Math.sin(a)}); tx.textContent=i+1; g.appendChild(tx);
+    g.addEventListener('click',function(){setStep(i);});
+    g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();setStep(i);} });
+    ring.appendChild(g); nodes.push(g);
+  })(k); }
+  function setStep(i){
+    si=(i+NSTEPS)%NSTEPS; nodes.forEach(function(n,k){ n.classList.toggle('on',k===si); });
+    stepBox.innerHTML='<h3>'+(si+1)+'. '+stepPart(si,'t')+'</h3><dl><dt>me</dt><dd>'+stepPart(si,'me')+'</dd><dt>you</dt><dd>'+stepPart(si,'you')+'</dd></dl>'+
+      '<div class="stepnav"><button class="btn" id="prev">back</button><button class="btn" id="next">'+(si===NSTEPS-1?'back to the start':'next')+'</button></div>';
+    document.getElementById('prev').onclick=function(){setStep(si-1);};
+    document.getElementById('next').onclick=function(){setStep(si+1);};
+  }
+  setStep(0);
+
+  /* ---------- said / meant ---------- */
+  document.querySelectorAll('.turn').forEach(function(b){ activate(b,function(){
+    var on=b.getAttribute('aria-pressed')==='true';
+    b.setAttribute('aria-pressed',on?'false':'true');
+    b.querySelector('.cue').textContent=on?'turn over':'turn back';
+  }); });
+
+  /* ================= EDIT MODE ================= */
+  if(!EDIT) return;
+  var EDITABLE='header h1, header p, main h2, main h3, main p, main summary, .ifever li, .turn .cue';
+  var openedByEdit=[];
+  document.documentElement.classList.add('editing');
+  document.querySelectorAll(EDITABLE).forEach(function(n){
+    if(n.closest('[data-gen]')) return;
+    if(n.matches('.ifever li')){ n.setAttribute('contenteditable','true'); return; }
+    if(n.closest('.ifever li')) return;
+    n.setAttribute('contenteditable','true');
+  });
+  document.querySelectorAll('.thread').forEach(function(n){ n.setAttribute('contenteditable','true'); });
+  document.querySelectorAll('details').forEach(function(d){ if(!d.open){ d.open=true; openedByEdit.push(d);} });
+  document.querySelectorAll('summary').forEach(function(s){ s.addEventListener('click',function(e){ if(document.documentElement.classList.contains('editing')) e.preventDefault(); }); });
+
+  var bar=document.createElement('div'); bar.id='edit-bar';
+  bar.innerHTML='<span>Editing. Click any dashed text and type. Boxed sections are what appears when she taps things.</span><button type="button" id="ed-save">Save edited copy</button><button type="button" class="ghost" id="ed-copy">Copy page code</button>';
+  document.body.appendChild(bar); document.body.style.paddingBottom='5rem';
+
+  function cleanHTML(){
+    var clone=document.documentElement.cloneNode(true);
+    clone.classList.remove('editing'); if(!clone.getAttribute('class')) clone.removeAttribute('class');
+    var eb=clone.querySelector('#edit-bar'); if(eb) eb.remove();
+    clone.querySelectorAll('a[download]').forEach(function(a){ a.remove(); });
+    clone.querySelectorAll('[contenteditable]').forEach(function(n){ if(!n.textContent.trim()){ var li=n.closest('li'); (li && !li.textContent.trim() ? li : n).remove(); } });
+    clone.querySelectorAll('[contenteditable]').forEach(function(n){ n.removeAttribute('contenteditable'); });
+    var ep=clone.querySelector('#edit-panel'); if(ep) ep.remove();
+    var b=clone.querySelector('body'); b.style.removeProperty('padding-bottom'); if(!b.getAttribute('style')) b.removeAttribute('style');
+    // put generated areas back to how they were written
+    var origGen=Array.from(genInitial.keys()), cloneGen=clone.querySelectorAll('[data-gen]');
+    cloneGen.forEach(function(n,i){ n.innerHTML=genInitial.get(origGen[i]); n.removeAttribute('style'); });
+    clone.querySelectorAll('.thread').forEach(function(n){ n.setAttribute('aria-expanded','false'); });
+    clone.querySelectorAll('.turn').forEach(function(n){ n.setAttribute('aria-pressed','false'); });
+    clone.querySelectorAll('[data-anim]').forEach(function(n){ n.classList.remove('in'); });
+    var origD=document.querySelectorAll('details'), cloneD=clone.querySelectorAll('details');
+    cloneD.forEach(function(d,i){ if(openedByEdit.indexOf(origD[i])>-1) d.removeAttribute('open'); });
+    return '<!DOCTYPE html>\n'+clone.outerHTML;
+  }
+  var inFrame=false; try{ inFrame = window.self!==window.top; }catch(e){ inFrame=true; }
+  var panel=document.createElement('div'); panel.id='edit-panel'; panel.hidden=true;
+  panel.innerHTML='<div class="ep-box"><p id="ep-msg"></p><textarea id="ep-code" readonly spellcheck="false"></textarea>'+
+    '<div class="ep-row"><button type="button" id="ep-copy">Copy all</button><button type="button" class="ghost" id="ep-close">Close</button></div></div>';
+  document.body.appendChild(panel);
+  function showPanel(msg){
+    document.getElementById('ep-msg').innerHTML=msg;
+    var ta=document.getElementById('ep-code'); ta.value=cleanHTML(); panel.hidden=false;
+  }
+  document.getElementById('ep-close').onclick=function(){ panel.hidden=true; };
+  document.getElementById('ep-code').addEventListener('focus',function(){ this.select(); });
+  document.getElementById('ep-copy').onclick=function(){
+    var ta=document.getElementById('ep-code'), btn=this; ta.focus(); ta.select(); ta.setSelectionRange(0,ta.value.length);
+    var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+    if(ok){ btn.textContent='Copied'; return; }
+    if(navigator.clipboard){ navigator.clipboard.writeText(ta.value).then(function(){btn.textContent='Copied';},function(){btn.textContent='Select the text and copy it manually';}); }
+    else btn.textContent='Select the text and copy it manually';
+  };
+  document.getElementById('ed-save').onclick=function(){
+    var html=cleanHTML(), downloaded=false;
+    if(!inFrame){
+      try{
+        var blob=new Blob([html],{type:'text/html'}), a=document.createElement('a');
+        a.href=URL.createObjectURL(blob); a.download='between-then-and-now.html'; a.rel='noopener';
+        document.body.appendChild(a); a.click(); downloaded=true;
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },4000);
+      }catch(e){ downloaded=false; }
+    }
+    if(downloaded){
+      showPanel('<b>Saved.</b> Look in your Downloads for <i>between-then-and-now.html</i>. That file has your edits. If nothing downloaded, copy the code below and paste it into a new file with that name.');
+    } else {
+      showPanel('<b>This window can’t download files</b> (previews and in-app browsers block it). Copy the code below and paste it into a new file named <i>between-then-and-now.html</i>, or open the file directly in Chrome or Safari and press Save again.');
+    }
+  };
+  document.getElementById('ed-copy').onclick=function(){
+    var html=cleanHTML(), btn=this;
+    (navigator.clipboard?navigator.clipboard.writeText(html):Promise.reject()).then(function(){ btn.textContent='Copied'; },function(){
+      var ta=document.createElement('textarea'); ta.value=html; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); btn.textContent='Copied';}catch(e){btn.textContent='Copy failed';} ta.remove();
+    });
+  };
+})();
+</script>
+
+
+</body></html>
